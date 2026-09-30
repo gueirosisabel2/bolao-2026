@@ -157,15 +157,38 @@ function validateBRWhatsApp(phone) {
     };
   }
 
-  // Bloqueio de dígitos repetidos fictícios (ex: 11111111111, 99999999999)
+  // Bloqueio de dígitos repetidos idênticos (ex: 11111111111, 99999999999)
   if (/^(\d)\1{10}$/.test(digits)) {
     return { isValid: false, error: 'Número inválido (todos os dígitos repetidos).' };
   }
 
-  // Bloqueio de sequências fictícias óbvias
+  // Bloqueio de números com 5 ou mais dígitos idênticos seguidos no assinante (ex: 99999-9991, 98888-8888)
   const subscriber = digits.substring(2);
-  if (subscriber === '999999999' || subscriber === '123456789' || subscriber === '987654321' || subscriber === '000000000') {
-    return { isValid: false, error: 'Por favor, informe seu número de WhatsApp real.' };
+  if (/(\d)\1{4,}/.test(subscriber)) {
+    return { 
+      isValid: false, 
+      error: 'Número fictício ou de teste. Informe seu número real de WhatsApp.' 
+    };
+  }
+
+  // Bloqueio se o mesmo dígito se repete 6 ou mais vezes no assinante de 9 dígitos
+  for (let i = 0; i <= 9; i++) {
+    const count = (subscriber.split(String(i)).length - 1);
+    if (count >= 6) {
+      return { 
+        isValid: false, 
+        error: 'Número fictício ou de teste. Informe seu número real de WhatsApp.' 
+      };
+    }
+  }
+
+  // Bloqueio de sequências fictícias óbvias
+  const dummySequences = [
+    '999999999', '123456789', '987654321', '912345678', 
+    '987651234', '000000000', '900000000', '911111111'
+  ];
+  if (dummySequences.includes(subscriber)) {
+    return { isValid: false, error: 'Por favor, informe seu número real de WhatsApp.' };
   }
 
   const formatted = `(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${digits.substring(7)}`;
