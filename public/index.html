@@ -122,13 +122,13 @@
   <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-10 space-y-6 sm:space-y-10">
 
     <!-- 4. CONTAGEM REGRESSIVA EM DESTAQUE (CARD BRANCO OTIMIZADO PARA MOBILE) -->
-    <section class="glass-card rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-8 text-center relative border border-slate-200 shadow-md bg-white">
+    <section class="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-7 md:p-8 text-center relative border border-slate-200 shadow-md bg-white">
 
       <!-- Live Active Countdown -->
       <div id="timerActive">
-        <div class="inline-flex items-center space-x-2 bg-amber-50 text-amber-900 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-bold mb-3.5 border border-amber-300 shadow-sm">
-          <i class="fa-regular fa-clock text-amber-600 text-sm"></i>
-          <span>TEMPO PARA DAR OU ALTERAR SEU PALPITE</span>
+        <div class="inline-flex items-center space-x-2 bg-amber-50 text-amber-900 px-3 py-1.5 rounded-full text-xs sm:text-sm font-bold mb-3.5 border border-amber-300 shadow-sm max-w-full">
+          <i class="fa-regular fa-clock text-amber-600 text-sm flex-shrink-0"></i>
+          <span class="truncate">TEMPO PARA DAR OU ALTERAR SEU PALPITE</span>
         </div>
 
         <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 mb-2.5 sm:mb-3 tracking-tight">
@@ -139,22 +139,22 @@
         </p>
 
         <!-- Big Countdown Digits (Responsivo para Celular com Letras e Números Maiores) -->
-        <div class="grid grid-cols-4 gap-2 sm:gap-3 md:gap-4 max-w-md mx-auto">
-          <div class="timer-box rounded-xl sm:rounded-2xl p-2.5 sm:p-3 md:p-4 text-center">
+        <div class="grid grid-cols-4 gap-1.5 sm:gap-3 md:gap-4 max-w-md mx-auto">
+          <div class="timer-box rounded-xl sm:rounded-2xl py-2.5 px-1 sm:p-3 md:p-4 text-center min-w-0">
             <span id="countDays" class="block text-2xl sm:text-3xl md:text-4xl font-black text-amber-600 font-mono tracking-tight leading-none mb-1">00</span>
-            <span class="text-[11px] sm:text-xs text-slate-600 font-bold uppercase tracking-wider">Dias</span>
+            <span class="text-[9.5px] sm:text-xs text-slate-600 font-bold uppercase tracking-tight sm:tracking-wider block truncate">Dias</span>
           </div>
-          <div class="timer-box rounded-xl sm:rounded-2xl p-2.5 sm:p-3 md:p-4 text-center">
+          <div class="timer-box rounded-xl sm:rounded-2xl py-2.5 px-1 sm:p-3 md:p-4 text-center min-w-0">
             <span id="countHours" class="block text-2xl sm:text-3xl md:text-4xl font-black text-amber-600 font-mono tracking-tight leading-none mb-1">00</span>
-            <span class="text-[11px] sm:text-xs text-slate-600 font-bold uppercase tracking-wider">Horas</span>
+            <span class="text-[9.5px] sm:text-xs text-slate-600 font-bold uppercase tracking-tight sm:tracking-wider block truncate">Horas</span>
           </div>
-          <div class="timer-box rounded-xl sm:rounded-2xl p-2.5 sm:p-3 md:p-4 text-center">
+          <div class="timer-box rounded-xl sm:rounded-2xl py-2.5 px-1 sm:p-3 md:p-4 text-center min-w-0">
             <span id="countMinutes" class="block text-2xl sm:text-3xl md:text-4xl font-black text-amber-600 font-mono tracking-tight leading-none mb-1">00</span>
-            <span class="text-[11px] sm:text-xs text-slate-600 font-bold uppercase tracking-wider">Minutos</span>
+            <span class="text-[9.5px] sm:text-xs text-slate-600 font-bold uppercase tracking-tight sm:tracking-wider block truncate">Minutos</span>
           </div>
-          <div class="timer-box rounded-xl sm:rounded-2xl p-2.5 sm:p-3 md:p-4 text-center">
+          <div class="timer-box rounded-xl sm:rounded-2xl py-2.5 px-1 sm:p-3 md:p-4 text-center min-w-0">
             <span id="countSeconds" class="block text-2xl sm:text-3xl md:text-4xl font-black text-amber-600 font-mono tracking-tight leading-none mb-1">00</span>
-            <span class="text-[11px] sm:text-xs text-slate-600 font-bold uppercase tracking-wider">Segundos</span>
+            <span class="text-[9.5px] sm:text-xs text-slate-600 font-bold uppercase tracking-tight sm:tracking-wider block truncate">Segundos</span>
           </div>
         </div>
       </div>

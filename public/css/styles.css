@@ -53,6 +53,8 @@ body {
   background: #ffffff;
   border: 1.5px solid #e2e8f0;
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .timer-box.closed {
