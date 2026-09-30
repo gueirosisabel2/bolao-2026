@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>PALPITE VOTOS DANI E CAPITÃO | Bolão Oficial 2026</title>
   
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
+  <!-- Favicon (Laranjinha Oficial com Alvo Bullseye) -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.svg">
 
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -649,23 +650,17 @@
 
   </main>
 
-  <!-- Rodapé (Claro) -->
+  <!-- Rodapé (Claro - 100% Limpo sem links de Admin) -->
   <footer class="border-t border-slate-200 bg-white py-6 sm:py-8 px-4 text-center text-xs text-slate-500 mt-8 sm:mt-12">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-      <div class="flex items-center space-x-1.5 font-medium">
+      <div class="flex items-center space-x-1.5 font-medium mx-auto sm:mx-0">
         <i class="fa-solid fa-bullseye text-amber-500"></i>
         <span class="text-amber-700 font-bold">PALPITE VOTOS DANI E CAPITÃO</span>
         <span>•</span>
         <span>Eleições 2026</span>
       </div>
-      <div class="text-slate-500 text-[11px] sm:text-xs">
+      <div class="text-slate-500 text-[11px] sm:text-xs mx-auto sm:mx-0">
         Prazo final: Sábado, 03 de Outubro de 2026 às 18:00 (Brasília)
-      </div>
-      <div>
-        <button onclick="openAdminModal()" class="text-slate-600 hover:text-amber-600 transition-colors underline font-semibold flex items-center justify-center space-x-1 mx-auto">
-          <i class="fa-solid fa-lock text-[10px]"></i>
-          <span>Painel do Administrador (PIN)</span>
-        </button>
       </div>
     </div>
   </footer>
@@ -718,10 +713,10 @@
           <input 
             type="password" 
             id="adminPinInput" 
-            placeholder="PIN (padrão: 2026)" 
+            placeholder="Digite o PIN de segurança" 
             class="vote-input w-full px-3.5 py-2.5 rounded-xl font-mono text-sm border-slate-300"
           >
-          <p class="text-[11px] text-slate-500 mt-1">PIN padrão do sistema: <strong>2026</strong></p>
+          <p class="text-[11px] text-slate-500 mt-1">Acesso restrito ao administrador autorizado.</p>
         </div>
 
         <!-- 6. Lançamento da Apuração Oficial -->
