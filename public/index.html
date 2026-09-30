@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>PALPITE VOTOS DANI E CAPITÃO | Bolão Oficial 2026</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandNavy: '#1e3a8a',
+            brandGold: '#f59e0b',
+            brandGreen: '#10b981',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom CSS (Light Theme + Mobile Optimizations) -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-mesh text-slate-800 min-h-screen flex flex-col antialiased pb-16 md:pb-0">
+
+  <!-- Top Navigation Bar (Header Elegante e Descomplicado) -->
+  <header class="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-40 shadow-sm">
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 py-2 sm:py-2.5 flex items-center justify-between">
+      
+      <!-- Logo + Título (Limpo e sem quebras feias - Triplo clique abre o Admin oculto) -->
+      <a href="#" id="secretAdminTrigger" class="flex items-center space-x-2.5 sm:space-x-3 group">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-white shadow-md shadow-amber-500/20 flex-shrink-0 group-hover:scale-105 transition-transform">
+          <i class="fa-solid fa-bullseye text-base sm:text-lg"></i>
+        </div>
+        <div>
+          <div class="text-sm sm:text-base font-black tracking-tight text-slate-900 leading-tight">
+            BOLÃO 2026
+          </div>
+          <div class="text-[11px] sm:text-xs text-amber-700 font-bold tracking-wide">
+            DANI ALONSO & CAPITÃO
+          </div>
+        </div>
+      </a>
+
+      <!-- Menu Desktop (Visível em Telas Médias e Grandes) -->
+      <nav class="hidden md:flex items-center space-x-2 text-sm font-semibold">
+        <a href="#palpitar" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-slate-700 hover:text-amber-600 hover:bg-amber-50/70 transition-all">
+          <i class="fa-solid fa-pen-to-square text-amber-500 text-xs"></i>
+          <span>Meu Palpite</span>
+        </a>
+        <a href="#tabela" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-slate-700 hover:text-sky-600 hover:bg-sky-50/70 transition-all">
+          <i class="fa-solid fa-users text-sky-500 text-xs"></i>
+          <span>Palpites da Galera</span>
+        </a>
+        <a href="#estatisticas" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-slate-700 hover:text-emerald-600 hover:bg-emerald-50/70 transition-all">
+          <i class="fa-solid fa-chart-column text-emerald-500 text-xs"></i>
+          <span>Estatísticas</span>
+        </a>
+      </nav>
+
+      <!-- Botões do Cabeçalho Mobile (Clean e Espaçoso) -->
+      <div class="flex md:hidden items-center space-x-1.5">
+        <button onclick="toggleMobileMenu()" id="mobileMenuBtn" aria-label="Abrir menu" class="w-9 h-9 rounded-xl bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-700 border border-slate-200 flex items-center justify-center transition-all shadow-sm">
+          <i id="mobileMenuIcon" class="fa-solid fa-bars text-sm"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Dropdown Menu Mobile (Expansível ao Clicar no Hambúrguer) -->
+    <div id="mobileDropdownMenu" class="hidden md:hidden border-t border-slate-100 bg-white/98 backdrop-blur px-4 py-3 space-y-1.5 shadow-lg animate-fade-in">
+      <a href="#palpitar" onclick="closeMobileMenu()" class="flex items-center space-x-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-amber-50 active:bg-amber-50 font-bold transition-all">
+        <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xs flex-shrink-0">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </div>
+        <div class="flex-1">
+          <div class="text-sm font-bold text-slate-900">Meu Palpite</div>
+          <div class="text-[11px] text-slate-500 font-normal">Preencha ou altere seus votos</div>
+        </div>
+      </a>
+
+      <a href="#tabela" onclick="closeMobileMenu()" class="flex items-center space-x-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-sky-50 active:bg-sky-50 font-bold transition-all">
+        <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-xs flex-shrink-0">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div class="flex-1">
+          <div class="text-sm font-bold text-slate-900">Palpites da Galera</div>
+          <div class="text-[11px] text-slate-500 font-normal">Tabela pública de todos os palpites</div>
+        </div>
+      </a>
+
+      <a href="#estatisticas" onclick="closeMobileMenu()" class="flex items-center space-x-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-emerald-50 active:bg-emerald-50 font-bold transition-all">
+        <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs flex-shrink-0">
+          <i class="fa-solid fa-chart-column"></i>
+        </div>
+        <div class="flex-1">
+          <div class="text-sm font-bold text-slate-900">Painel de Estatísticas</div>
+          <div class="text-[11px] text-slate-500 font-normal">Médias e recordes de palpites</div>
+        </div>
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-10 space-y-6 sm:space-y-10">
+
+    <!-- 4. CONTAGEM REGRESSIVA EM DESTAQUE (CARD BRANCO OTIMIZADO PARA MOBILE) -->
+    <section class="glass-card rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-8 text-center relative border border-slate-200 shadow-md bg-white">
+
+      <!-- Live Active Countdown -->
+      <div id="timerActive">
+        <div class="inline-flex items-center space-x-2 bg-amber-50 text-amber-900 px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold mb-3 border border-amber-300 shadow-sm">
+          <i class="fa-regular fa-clock text-amber-600 text-sm"></i>
+          <span>TEMPO PARA DAR OU ALTERAR SEU PALPITE</span>
+        </div>
+
+        <h2 class="text-xl sm:text-3xl md:text-4xl font-black text-slate-900 mb-2 tracking-tight">
+          PALPITE VOTOS DANI E CAPITÃO
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto mb-4 sm:mb-6 leading-relaxed">
+          Você pode cadastrar e modificar seus palpites quantas vezes quiser até 
+          <span class="text-amber-700 font-bold block sm:inline">sábado, 3 de outubro de 2026, às 18:00 (horário de Brasília)</span>.
+        </p>
+
+        <!-- Big Countdown Digits (Responsivo para Celular) -->
+        <div class="grid grid-cols-4 gap-1.5 sm:gap-3 md:gap-4 max-w-md mx-auto">
+          <div class="timer-box rounded-xl sm:rounded-2xl p-2 sm:p-3 md:p-4 text-center">
+            <span id="countDays" class="block text-xl sm:text-3xl md:text-4xl font-black text-amber-600 font-mono tracking-tight leading-none mb-1">00</span>
+            <span class="text-[9px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">Dias</span>
+          </div>
+          <div class="timer-box rounded-xl sm:rounded-2xl p-2 sm:p-3 md:p-4 text-center">
+            <span id="countHours" class="block text-xl sm:text-3xl md:text-4xl font-black text-amber-600 font-mono tracking-tight leading-none mb-1">00</span>
+            <span class="text-[9px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">Horas</span>
+          </div>
+          <div class="timer-box rounded-xl sm:rounded-2xl p-2 sm:p-3 md:p-4 text-center">
+            <span id="countMinutes" class="block text-xl sm:text-3xl md:text-4xl font-black text-amber-600 font-mono tracking-tight leading-none mb-1">00</span>
+            <span class="text-[9px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">Minutos</span>
+          </div>
+          <div class="timer-box rounded-xl sm:rounded-2xl p-2 sm:p-3 md:p-4 text-center">
+            <span id="countSeconds" class="block text-xl sm:text-3xl md:text-4xl font-black text-amber-600 font-mono tracking-tight leading-none mb-1">00</span>
+            <span class="text-[9px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">Segundos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Closed Countdown State (Limpo, Elegante e Sem Elementos Escuros) -->
+      <div id="timerClosed" class="hidden py-6 sm:py-8 max-w-lg mx-auto text-center">
+        <!-- Título Principal Oficial -->
+        <h2 class="text-2xl sm:text-4xl font-black text-slate-900 mb-3 tracking-tight">
+          🔒 PALPITES ENCERRADOS!
+        </h2>
+
+        <!-- Card de Frase Oficial -->
+        <div class="bg-gradient-to-r from-amber-50 via-white to-amber-50 p-4 sm:p-5 rounded-2xl border border-amber-200 shadow-sm max-w-md mx-auto">
+          <p class="text-base sm:text-lg text-slate-900 font-bold italic mb-1">
+            “Agora é só aguardar a apuração!”
+          </p>
+          <p class="text-[11px] sm:text-xs text-slate-500 font-medium">
+            Todos os registros estão definitivamente congelados. Em breve os resultados oficiais serão lançados!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. PÓDIO FINAL & RESULTADO OFICIAL (TELA COMEMORATIVA CLARA) -->
+    <section id="officialResultsSection" class="hidden space-y-6 sm:space-y-8">
+      <!-- Banner Comemorativo (Dourado & Branco) -->
+      <div class="glass-card-gold rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 text-center relative overflow-hidden border-2 border-amber-400 shadow-xl">
+        <div class="champion-shimmer absolute inset-0 pointer-events-none"></div>
+
+        <div class="relative z-10">
+          <div class="inline-flex items-center space-x-1.5 px-3 sm:px-4 py-1 rounded-full bg-amber-500 text-white font-black text-[11px] sm:text-xs tracking-wider uppercase mb-3 shadow">
+            <i class="fa-solid fa-square-poll-vertical"></i>
+            <span>RESULTADOS OFICIAIS APURADOS</span>
+          </div>
+          <h2 class="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-2 tracking-tight flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-trophy text-amber-500 text-xl sm:text-3xl"></i>
+            <span>CAMPEÃO DO BOLÃO 2026</span>
+          </h2>
+          <p class="text-xs sm:text-sm md:text-base text-slate-700 max-w-xl mx-auto mb-6 sm:mb-8 font-medium">
+            Confira quem chegou mais perto dos votos apurados oficialmente nas urnas!
+          </p>
+
+          <!-- Apuração Oficial dos Dois Candidatos (Cards Claros com Fotos Ajustadas) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5 max-w-2xl mx-auto mb-8 sm:mb-10 text-left">
+            <!-- Card Capitão Augusto -->
+            <div class="bg-white p-3.5 sm:p-5 rounded-2xl border-2 border-sky-300 flex items-center space-x-3.5 sm:space-x-4 shadow-md">
+              <div class="result-avatar-box border-2 border-sky-400 shadow bg-sky-50 flex-shrink-0">
+                <img src="/images/capitao.png?v=2" alt="Capitão Augusto" class="result-avatar-capitao">
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[10px] sm:text-[11px] text-sky-700 uppercase font-black tracking-wider flex items-center space-x-1 mb-0.5">
+                  <i class="fa-solid fa-check-to-slot"></i>
+                  <span>Resultado Oficial</span>
+                </div>
+                <div class="text-sm sm:text-lg font-black text-slate-900 truncate">Capitão Augusto</div>
+                <div class="text-[11px] sm:text-xs text-slate-500 font-medium">Deputado Federal</div>
+                <div id="officialCapitaoVotes" class="text-lg sm:text-2xl font-black text-sky-700 font-mono mt-0.5">0 votos</div>
+              </div>
+            </div>
+
+            <!-- Card Dani Alonso -->
+            <div class="bg-white p-3.5 sm:p-5 rounded-2xl border-2 border-pink-300 flex items-center space-x-3.5 sm:space-x-4 shadow-md">
+              <div class="result-avatar-box border-2 border-pink-400 shadow bg-pink-50 flex-shrink-0">
+                <img src="/images/dani.png?v=2" alt="Dani Alonso" class="result-avatar-dani">
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[10px] sm:text-[11px] text-pink-700 uppercase font-black tracking-wider flex items-center space-x-1 mb-0.5">
+                  <i class="fa-solid fa-check-to-slot"></i>
+                  <span>Resultado Oficial</span>
+                </div>
+                <div class="text-sm sm:text-lg font-black text-slate-900 truncate">Dani Alonso</div>
+                <div class="text-[11px] sm:text-xs text-slate-500 font-medium">Deputada Estadual</div>
+                <div id="officialDaniVotes" class="text-lg sm:text-2xl font-black text-pink-700 font-mono mt-0.5">0 votos</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PÓDIO DOS 3 PRIMEIROS LUGARES (RESPONSIVO MOBILE) -->
+          <div class="grid grid-cols-3 gap-1.5 sm:gap-3 md:gap-4 max-w-3xl mx-auto items-end pt-2">
+            <!-- 2º LUGAR -->
+            <div class="flex flex-col items-center">
+              <div id="podiumSecondPlace" class="w-full"></div>
+              <div class="podium-step podium-step-2 w-full flex items-center justify-center">
+                <span class="text-2xl sm:text-4xl md:text-5xl font-black text-slate-400 font-mono">2º</span>
+              </div>
+            </div>
+
+            <!-- 1º LUGAR (CAMPEÃO) -->
+            <div class="flex flex-col items-center">
+              <div id="podiumFirstPlace" class="w-full"></div>
+              <div class="podium-step podium-step-1 w-full flex items-center justify-center shadow-lg shadow-amber-500/20">
+                <div class="text-center px-1">
+                  <span class="text-3xl sm:text-5xl md:text-6xl font-black text-amber-700 font-mono block leading-none">1º</span>
+                  <span class="text-[9px] sm:text-xs font-black text-amber-800 uppercase tracking-widest block mt-0.5">CAMPEÃO</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3º LUGAR -->
+            <div class="flex flex-col items-center">
+              <div id="podiumThirdPlace" class="w-full"></div>
+              <div class="podium-step podium-step-3 w-full flex items-center justify-center">
+                <span class="text-xl sm:text-3xl md:text-4xl font-black text-orange-600/70 font-mono">3º</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. TABELA DE RESULTADO E RANKING COMPLETO (TEMA CLARO) -->
+      <div class="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-7 border border-slate-200 shadow-md bg-white">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+          <div>
+            <h3 class="text-base sm:text-xl font-black text-slate-900 flex items-center space-x-2">
+              <i class="fa-solid fa-ranking-star text-amber-600"></i>
+              <span>Classificação Geral do Bolão</span>
+            </h3>
+            <p class="text-[11px] sm:text-xs text-slate-500">
+              Quanto <strong>MENOR</strong> o erro total acumulado, melhor a colocação no ranking.
+            </p>
+          </div>
+          <div class="text-[10px] sm:text-xs text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200 font-medium self-start sm:self-auto">
+            Diferença = Palpite − Oficial
+          </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-left custom-table text-xs sm:text-sm">
+            <thead>
+              <tr class="text-slate-600">
+                <th class="w-12 text-center">Pos</th>
+                <th>Participante</th>
+                <th>Capitão Augusto (Palpite → Oficial → Dif)</th>
+                <th>Dani Alonso (Palpite → Oficial → Dif)</th>
+                <th class="text-right">Erro Total</th>
+              </tr>
+            </thead>
+            <tbody id="rankingTableBody" class="divide-y divide-slate-100">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. CADASTRO DO PARTICIPANTE / FORMULÁRIO (CARD BRANCO OTIMIZADO) -->
+    <section id="palpitar" class="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-7 md:p-9 border border-slate-200 shadow-lg relative bg-white">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 sm:pb-6 border-b border-slate-100 gap-3">
+        <div>
+          <div class="inline-flex items-center space-x-1.5 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-bold mb-1.5 border border-blue-200">
+            <i class="fa-solid fa-user-pen text-blue-600 text-xs"></i>
+            <span>CADASTRO DO PARTICIPANTE</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+            Registre ou Atualize seu Palpite
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Cada número de WhatsApp tem 1 cadastro único, podendo ser alterado livremente até sábado (03/10 às 18h).
+          </p>
+        </div>
+
+        <!-- Banner de bloqueio se expirado -->
+        <div id="formLockedBanner" class="hidden bg-red-50 border border-red-200 text-red-800 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center space-x-2">
+          <i class="fa-solid fa-lock text-red-600 text-base"></i>
+          <span>Registros congelados definitivamente!</span>
+        </div>
+      </div>
+
+      <!-- Aviso Dinâmico caso já exista cadastro com o número digitado -->
+      <div id="existingParticipantNotice" class="hidden mt-4"></div>
+
+      <form id="palpiteForm" class="mt-5 sm:mt-6 space-y-6 sm:space-y-8">
+        <!-- Dados Pessoais: Nome & WhatsApp -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+          <div>
+            <label for="nome" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              Seu Nome Completo <span class="text-amber-600">*</span>
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                <i class="fa-solid fa-user text-xs sm:text-sm"></i>
+              </span>
+              <input 
+                type="text" 
+                id="nome" 
+                name="nome" 
+                required 
+                placeholder="Ex: Carlos Eduardo de Oliveira" 
+                class="vote-input w-full pl-10 pr-4 py-3 rounded-xl text-sm sm:text-base font-medium focus:ring-0 shadow-sm"
+              >
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">Como seu nome aparecerá na tabela pública e no pódio.</p>
+          </div>
+
+          <div>
+            <label for="whatsapp" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              Número de WhatsApp <span class="text-amber-600">*</span>
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i>
+              </span>
+              <input 
+                type="tel" 
+                inputmode="tel"
+                id="whatsapp" 
+                name="whatsapp" 
+                required 
+                placeholder="(14) 99999-9999" 
+                maxlength="15"
+                class="vote-input w-full pl-10 pr-4 py-3 rounded-xl text-sm sm:text-base font-medium focus:ring-0 font-mono shadow-sm"
+              >
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">Identificador único. Use o mesmo WhatsApp para alterar depois.</p>
+          </div>
+        </div>
+
+        <!-- Palpites dos Candidatos (Cards Claros com Fotos Oficiais) -->
+        <div>
+          <div class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3.5 flex items-center space-x-1.5">
+            <i class="fa-solid fa-check-to-slot text-amber-500 text-sm"></i>
+            <span>SEUS PALPITES DE VOTOS NAS URNAS</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            
+            <!-- CANDIDATO 1: CAPITÃO AUGUSTO -->
+            <div class="candidate-card bg-gradient-to-b from-sky-50/60 to-white rounded-2xl p-4 sm:p-5 border-2 border-sky-100 hover:border-sky-300 transition-all flex flex-col justify-between shadow-sm">
+              <div>
+                <div class="candidate-img-wrap mb-3.5 bg-slate-100 border border-sky-100">
+                  <img src="/images/capitao.png?v=2" alt="Capitão Augusto" loading="lazy">
+                  <div class="absolute bottom-2 left-2 bg-white/95 backdrop-blur px-2.5 py-0.5 rounded-lg text-xs font-bold text-sky-800 border border-sky-200 shadow-sm flex items-center space-x-1">
+                    <i class="fa-solid fa-landmark text-[10px]"></i>
+                    <span>Deputado Federal</span>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <h3 class="text-base sm:text-lg font-black text-slate-900 flex items-center space-x-1.5">
+                    <span>Capitão Augusto</span>
+                    <i class="fa-solid fa-circle-check text-sky-600 text-xs sm:text-sm"></i>
+                  </h3>
+                  <p class="text-xs text-slate-500">Palpite de votos para Capitão Augusto em todo o Estado</p>
+                </div>
+              </div>
+
+              <div>
+                <label for="palpiteCapitao" class="block text-xs font-bold text-sky-800 mb-1.5 uppercase">
+                  Votos Capitão Augusto:
+                </label>
+                <div class="relative">
+                  <input 
+                    type="text" 
+                    inputmode="numeric"
+                    id="palpiteCapitao" 
+                    name="palpiteCapitao" 
+                    required 
+                    placeholder="Ex: 150.000" 
+                    class="vote-input w-full px-4 py-3 rounded-xl text-base font-bold font-mono text-sky-800 bg-white border-sky-300 focus:border-sky-500 shadow-sm"
+                  >
+                  <span class="absolute inset-y-0 right-0 pr-4 flex items-center text-xs font-bold text-slate-400 pointer-events-none">
+                    votos
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- CANDIDATA 2: DANI ALONSO -->
+            <div class="candidate-card bg-gradient-to-b from-pink-50/60 to-white rounded-2xl p-4 sm:p-5 border-2 border-pink-100 hover:border-pink-300 transition-all flex flex-col justify-between shadow-sm">
+              <div>
+                <div class="candidate-img-wrap mb-3.5 bg-slate-100 border border-pink-100">
+                  <img src="/images/dani.png?v=2" alt="Dani Alonso" loading="lazy">
+                  <div class="absolute bottom-2 left-2 bg-white/95 backdrop-blur px-2.5 py-0.5 rounded-lg text-xs font-bold text-pink-800 border border-pink-200 shadow-sm flex items-center space-x-1">
+                    <i class="fa-solid fa-landmark text-[10px]"></i>
+                    <span>Deputada Estadual</span>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <h3 class="text-base sm:text-lg font-black text-slate-900 flex items-center space-x-1.5">
+                    <span>Dani Alonso</span>
+                    <i class="fa-solid fa-circle-check text-pink-600 text-xs sm:text-sm"></i>
+                  </h3>
+                  <p class="text-xs text-slate-500">Palpite de votos para Dani Alonso em todo o Estado</p>
+                </div>
+              </div>
+
+              <div>
+                <label for="palpiteDani" class="block text-xs font-bold text-pink-800 mb-1.5 uppercase">
+                  Votos Dani Alonso:
+                </label>
+                <div class="relative">
+                  <input 
+                    type="text" 
+                    inputmode="numeric"
+                    id="palpiteDani" 
+                    name="palpiteDani" 
+                    required 
+                    placeholder="Ex: 120.000" 
+                    class="vote-input w-full px-4 py-3 rounded-xl text-base font-bold font-mono text-pink-800 bg-white border-pink-300 focus:border-pink-500 shadow-sm"
+                  >
+                  <span class="absolute inset-y-0 right-0 pr-4 flex items-center text-xs font-bold text-slate-400 pointer-events-none">
+                    votos
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Botão de Confirmação Principal -->
+        <div class="pt-2 text-center">
+          <button 
+            type="submit" 
+            id="submitPalpiteBtn"
+            class="btn-gold w-full sm:w-auto sm:min-w-[340px] px-8 py-4 rounded-2xl text-base font-black tracking-wide uppercase transition-all shadow-xl flex items-center justify-center mx-auto space-x-2"
+          >
+            <i class="fa-solid fa-bullseye text-lg"></i>
+            <span>CONFIRMAR MEU PALPITE</span>
+          </button>
+          <p class="text-xs text-slate-500 mt-2.5 font-medium">
+            Pressione o botão para registrar. Você pode alterar seus palpites até sábado, 03/10 às 18:00.
+          </p>
+        </div>
+      </form>
+    </section>
+
+    <!-- 3. PAINEL DE ESTATÍSTICAS (CARD BRANCO) -->
+    <section id="estatisticas" class="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-200 shadow-md bg-white">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 sm:pb-5 border-b border-slate-100 gap-2 mb-5 sm:mb-6">
+        <div>
+          <div class="inline-flex items-center space-x-1.5 bg-emerald-50 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold mb-1.5 border border-emerald-200">
+            <i class="fa-solid fa-chart-line text-emerald-600 text-xs"></i>
+            <span>PAINEL EM TEMPO REAL</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+            Estatísticas do Bolão
+          </h2>
+          <p class="text-xs text-slate-500">
+            Recalculadas instantaneamente a cada palpite cadastrado ou modificado.
+          </p>
+        </div>
+
+        <div class="bg-slate-100 px-3.5 py-1.5 rounded-xl border border-slate-200 flex items-center space-x-2 text-xs font-semibold self-start sm:self-auto">
+          <i class="fa-solid fa-users text-slate-500"></i>
+          <span class="text-slate-600">Total:</span>
+          <span id="statTotalParticipants" class="font-bold text-amber-700 font-mono text-sm">0 participantes</span>
+        </div>
+      </div>
+
+      <!-- Stat Cards Grid (Light & Clean) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-2">
+        <!-- Média Capitão Augusto -->
+        <div class="bg-gradient-to-br from-sky-50/80 to-white p-4 sm:p-5 rounded-2xl border border-sky-200 shadow-sm">
+          <div class="flex items-center justify-between mb-2 sm:mb-3">
+            <span class="text-xs font-bold text-sky-800 uppercase tracking-wider flex items-center space-x-1.5">
+              <i class="fa-solid fa-calculator text-sky-600"></i>
+              <span>Média dos Palpites</span>
+            </span>
+            <span class="text-xs bg-sky-100 text-sky-800 px-2.5 py-0.5 rounded font-bold border border-sky-200">Capitão Augusto</span>
+          </div>
+          <div id="statMediaCapitao" class="text-2xl sm:text-3xl font-black text-sky-950 font-mono mb-3 sm:mb-4">
+            0 votos
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs border-t border-sky-100 pt-3">
+            <div>
+              <span class="text-slate-500 block mb-0.5 font-semibold flex items-center">
+                <i class="fa-solid fa-arrow-up text-emerald-600 mr-1 text-[10px]"></i> Maior Palpite:
+              </span>
+              <div id="statMaiorCapitao" class="font-mono text-slate-800">---</div>
+            </div>
+            <div>
+              <span class="text-slate-500 block mb-0.5 font-semibold flex items-center">
+                <i class="fa-solid fa-arrow-down text-amber-600 mr-1 text-[10px]"></i> Menor Palpite:
+              </span>
+              <div id="statMenorCapitao" class="font-mono text-slate-800">---</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Média Dani Alonso -->
+        <div class="bg-gradient-to-br from-pink-50/80 to-white p-4 sm:p-5 rounded-2xl border border-pink-200 shadow-sm">
+          <div class="flex items-center justify-between mb-2 sm:mb-3">
+            <span class="text-xs font-bold text-pink-800 uppercase tracking-wider flex items-center space-x-1.5">
+              <i class="fa-solid fa-calculator text-pink-600"></i>
+              <span>Média dos Palpites</span>
+            </span>
+            <span class="text-xs bg-pink-100 text-pink-800 px-2.5 py-0.5 rounded font-bold border border-pink-200">Dani Alonso</span>
+          </div>
+          <div id="statMediaDani" class="text-2xl sm:text-3xl font-black text-pink-950 font-mono mb-3 sm:mb-4">
+            0 votos
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs border-t border-pink-100 pt-3">
+            <div>
+              <span class="text-slate-500 block mb-0.5 font-semibold flex items-center">
+                <i class="fa-solid fa-arrow-up text-emerald-600 mr-1 text-[10px]"></i> Maior Palpite:
+              </span>
+              <div id="statMaiorDani" class="font-mono text-slate-800">---</div>
+            </div>
+            <div>
+              <span class="text-slate-500 block mb-0.5 font-semibold flex items-center">
+                <i class="fa-solid fa-arrow-down text-amber-600 mr-1 text-[10px]"></i> Menor Palpite:
+              </span>
+              <div id="statMenorDani" class="font-mono text-slate-800">---</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. PALPITES PÚBLICOS ("PALPITES DA GALERA" - CARD BRANCO COM SUPORTE MOBILE COMPACTO) -->
+    <section id="tabela" class="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-200 shadow-md bg-white">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 sm:pb-5 border-b border-slate-100 gap-3 mb-5 sm:mb-6">
+        <div>
+          <div class="inline-flex items-center space-x-1.5 bg-amber-100 text-amber-900 px-3 py-1 rounded-full text-xs font-bold mb-1.5 border border-amber-300">
+            <i class="fa-solid fa-shield-halved text-amber-700 text-xs"></i>
+            <span>TRANSPARÊNCIA TOTAL</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight flex items-center space-x-2">
+            <i class="fa-solid fa-users text-amber-500 text-lg sm:text-2xl"></i>
+            <span>PALPITES DA GALERA</span>
+          </h2>
+          <p class="text-xs text-amber-800 font-semibold mt-0.5">
+            NÃO EXISTEM PALPITES SECRETOS. Todos podem visualizar os palpites dos demais participantes!
+          </p>
+        </div>
+
+        <div id="tableCountDisplay" class="text-xs text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 font-bold self-start sm:self-auto">
+          0 palpites
+        </div>
+      </div>
+
+      <!-- Filtros e Ordenação (Mobile Friendly) -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-5">
+        <!-- Campo de Busca -->
+        <div class="relative flex-1 max-w-md">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+          </span>
+          <input 
+            type="text" 
+            id="searchParticipants" 
+            placeholder="Buscar participante por nome..." 
+            class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 shadow-sm"
+          >
+        </div>
+
+        <!-- Seletor de Ordenação -->
+        <div class="flex items-center space-x-2">
+          <label for="sortSelect" class="text-xs text-slate-600 font-bold whitespace-nowrap flex items-center space-x-1">
+            <i class="fa-solid fa-arrow-down-wide-short text-slate-500"></i>
+            <span class="hidden sm:inline">Ordenar por:</span>
+          </label>
+          <select 
+            id="sortSelect" 
+            class="w-full sm:w-auto bg-white border border-slate-300 text-slate-700 text-xs sm:text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-amber-500 font-semibold shadow-sm"
+          >
+            <option value="name_asc">Nome (A - Z)</option>
+            <option value="capitao_desc">Maior palpite para Capitão Augusto</option>
+            <option value="capitao_asc">Menor palpite para Capitão Augusto</option>
+            <option value="dani_desc">Maior palpite para Dani Alonso</option>
+            <option value="dani_asc">Menor palpite para Dani Alonso</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tabela para Desktop / Tablets (md:table) -->
+      <div class="hidden sm:block overflow-x-auto rounded-2xl border border-slate-200">
+        <table class="w-full text-left custom-table text-xs sm:text-sm">
+          <thead>
+            <tr class="text-slate-600">
+              <th class="w-12 text-center">#</th>
+              <th>Participante</th>
+              <th>Capitão Augusto</th>
+              <th>Dani Alonso</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaPalpitesBody" class="divide-y divide-slate-100">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Feed de Cards Elegantes para Celular (sm:hidden) -->
+      <div id="tabelaPalpitesMobile" class="sm:hidden space-y-2.5">
+        <!-- Dynamically populated on mobile -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Rodapé (Claro) -->
+  <footer class="border-t border-slate-200 bg-white py-6 sm:py-8 px-4 text-center text-xs text-slate-500 mt-8 sm:mt-12">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+      <div class="flex items-center space-x-1.5 font-medium">
+        <i class="fa-solid fa-bullseye text-amber-500"></i>
+        <span class="text-amber-700 font-bold">PALPITE VOTOS DANI E CAPITÃO</span>
+        <span>•</span>
+        <span>Eleições 2026</span>
+      </div>
+      <div class="text-slate-500 text-[11px] sm:text-xs">
+        Prazo final: Sábado, 03 de Outubro de 2026 às 18:00 (Brasília)
+      </div>
+      <div>
+        <button onclick="openAdminModal()" class="text-slate-600 hover:text-amber-600 transition-colors underline font-semibold flex items-center justify-center space-x-1 mx-auto">
+          <i class="fa-solid fa-lock text-[10px]"></i>
+          <span>Painel do Administrador (PIN)</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal de Confirmação de Sucesso (Branco) -->
+  <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+    <div class="bg-white max-w-md w-full rounded-3xl p-6 sm:p-8 text-center relative border-2 border-amber-400 shadow-2xl animate-fade-in">
+      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-amber-100 text-amber-600 text-2xl sm:text-3xl flex items-center justify-center mx-auto mb-4 shadow-sm border border-amber-200">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h3 id="successModalTitle" class="text-lg sm:text-2xl font-black text-slate-900 mb-2">
+        Palpite Registrado com Sucesso!
+      </h3>
+      <p id="successModalMessage" class="text-xs sm:text-sm text-slate-700 mb-6 leading-relaxed font-medium">
+        “Palpite registrado com sucesso! 🎯 Você poderá alterar seus palpites até sábado, 3 de outubro, às 18h.”
+      </p>
+
+      <button 
+        onclick="closeSuccessModal()" 
+        class="btn-gold w-full py-3.5 rounded-xl font-black text-sm uppercase tracking-wide flex items-center justify-center space-x-2"
+      >
+        <span>Entendido!</span>
+        <i class="fa-solid fa-check"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal do Administrador (Branco) -->
+  <div id="adminModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-overlay hidden">
+    <div class="bg-white max-w-lg w-full rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-slate-200 shadow-2xl overflow-y-auto max-h-[92vh]">
+      <div class="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-100 mb-4 sm:mb-5">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-sm font-bold border border-amber-200">
+            <i class="fa-solid fa-gear"></i>
+          </div>
+          <h3 class="text-base sm:text-lg font-black text-slate-900">Painel do Administrador</h3>
+        </div>
+        <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-700 p-1.5 text-base">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-5 text-sm">
+        <!-- PIN de Segurança -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center space-x-1">
+            <i class="fa-solid fa-key text-amber-600 text-xs"></i>
+            <span>PIN de Administrador <span class="text-amber-600">*</span></span>
+          </label>
+          <input 
+            type="password" 
+            id="adminPinInput" 
+            placeholder="PIN (padrão: 2026)" 
+            class="vote-input w-full px-3.5 py-2.5 rounded-xl font-mono text-sm border-slate-300"
+          >
+          <p class="text-[11px] text-slate-500 mt-1">PIN padrão do sistema: <strong>2026</strong></p>
+        </div>
+
+        <!-- 6. Lançamento da Apuração Oficial -->
+        <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-200 space-y-3.5">
+          <div class="font-bold text-amber-900 flex items-center space-x-1.5 text-xs uppercase tracking-wider">
+            <i class="fa-solid fa-trophy text-amber-600"></i>
+            <span>Lançar Resultados Oficiais (Urnas)</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-sky-800 font-bold mb-1">Capitão Augusto:</label>
+              <input 
+                type="text" 
+                inputmode="numeric"
+                id="adminCapitao" 
+                placeholder="Ex: 152.400" 
+                class="vote-input w-full px-3 py-2 rounded-lg text-xs font-mono font-bold text-sky-800 bg-white border-sky-300"
+              >
+            </div>
+            <div>
+              <label class="block text-xs text-pink-800 font-bold mb-1">Dani Alonso:</label>
+              <input 
+                type="text" 
+                inputmode="numeric"
+                id="adminDani" 
+                placeholder="Ex: 124.850" 
+                class="vote-input w-full px-3 py-2 rounded-lg text-xs font-mono font-bold text-pink-800 bg-white border-pink-300"
+              >
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2 pt-1">
+            <input type="checkbox" id="adminPublishCheck" class="w-4 h-4 rounded text-amber-600 border-slate-300 focus:ring-0">
+            <label for="adminPublishCheck" class="text-xs text-slate-700 font-semibold cursor-pointer">
+              Publicar resultado e ativar tela comemorativa do Pódio
+            </label>
+          </div>
+
+          <button 
+            type="button" 
+            onclick="handleAdminSaveApuracao()"
+            class="btn-gold w-full py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-1.5"
+          >
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Salvar Apuração Oficial</span>
+          </button>
+        </div>
+
+        <!-- Ferramentas de Demonstração e Teste -->
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+          <div class="font-bold text-slate-700 text-xs uppercase tracking-wider flex items-center space-x-1.5">
+            <i class="fa-solid fa-wrench text-slate-500"></i>
+            <span>Ferramentas & Simulação</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+            <button 
+              type="button" 
+              onclick="handleAdminToggleSimulate()"
+              class="px-3 py-2 rounded-lg bg-white hover:bg-slate-100 text-slate-700 font-bold border border-slate-300 transition-colors shadow-sm flex items-center justify-center space-x-1.5"
+            >
+              <i class="fa-solid fa-clock text-slate-500"></i>
+              <span>Simular Prazo</span>
+            </button>
+            <button 
+              type="button" 
+              onclick="handleAdminExportCSV()"
+              class="px-3 py-2 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 font-bold border border-sky-300 transition-colors shadow-sm flex items-center justify-center space-x-1.5"
+            >
+              <i class="fa-solid fa-file-excel text-sky-600"></i>
+              <span>Exportar CSV</span>
+            </button>
+            <button 
+              type="button" 
+              onclick="handleAdminClearAll()"
+              class="px-3 py-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-800 font-bold border border-red-300 transition-colors shadow-sm flex items-center justify-center space-x-1.5"
+            >
+              <i class="fa-solid fa-trash-can text-red-600"></i>
+              <span>Zerar Dados</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de Navegação Inferior Fixa para Celular (Acesso Fácil com o Polegar - Sem Admin Visível) -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur border-t border-slate-200 py-1.5 px-3 flex justify-around items-center shadow-[0_-4px_16px_rgba(15,23,42,0.06)]">
+    <a href="#palpitar" class="flex flex-col items-center justify-center py-1 px-4 text-slate-600 hover:text-amber-600 active:text-amber-600 font-bold transition-colors">
+      <i class="fa-solid fa-pen-to-square text-lg text-amber-500 mb-0.5"></i>
+      <span class="text-[11px]">Palpitar</span>
+    </a>
+    <a href="#tabela" class="flex flex-col items-center justify-center py-1 px-4 text-slate-600 hover:text-sky-600 active:text-sky-600 font-bold transition-colors">
+      <i class="fa-solid fa-users text-lg text-sky-500 mb-0.5"></i>
+      <span class="text-[11px]">Galera</span>
+    </a>
+    <a href="#estatisticas" class="flex flex-col items-center justify-center py-1 px-4 text-slate-600 hover:text-emerald-600 active:text-emerald-600 font-bold transition-colors">
+      <i class="fa-solid fa-chart-column text-lg text-emerald-500 mb-0.5"></i>
+      <span class="text-[11px]">Estatísticas</span>
+    </a>
+  </nav>
+
+  <!-- App Script -->
+  <script src="/js/app.js"></script>
+</body>
+</html>
