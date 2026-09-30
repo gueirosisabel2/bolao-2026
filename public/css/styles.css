@@ -141,6 +141,22 @@ body {
   box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
 }
 
+.vote-input.input-valid {
+  border-color: #10b981 !important;
+}
+.vote-input.input-valid:focus {
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+}
+
+.vote-input.input-error {
+  border-color: #f43f5e !important;
+}
+.vote-input.input-error:focus {
+  border-color: #e11d48 !important;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.2) !important;
+}
+
 /* Pulsing Badge */
 .pulse-badge {
   animation: pulse-glow 2s infinite;

@@ -67,36 +67,91 @@ function isClosed(config) {
   return Date.now() >= deadlineMs;
 }
 
-// Canonical Brazilian Phone Normalization
-function normalizeBRPhone(phone) {
-  if (!phone) return null;
+// Official Brazilian DDDs (ANATEL)
+const VALID_BR_DDDS = new Set([
+  11, 12, 13, 14, 15, 16, 17, 18, 19,
+  21, 22, 24, 27, 28,
+  31, 32, 33, 34, 35, 37, 38,
+  41, 42, 43, 44, 45, 46, 47, 48, 49,
+  51, 53, 54, 55,
+  61, 62, 63, 64, 65, 66, 67, 68, 69,
+  71, 73, 74, 75, 77, 79,
+  81, 82, 83, 84, 85, 86, 87, 88, 89,
+  91, 92, 93, 94, 95, 96, 97, 98, 99
+]);
+
+// Canonical Brazilian WhatsApp & Phone Validator
+function validateBRWhatsApp(phone) {
+  if (!phone) {
+    return { isValid: false, error: 'Informe o número do seu WhatsApp.' };
+  }
+
   let digits = String(phone).replace(/\D/g, '');
 
+  // Strip international prefix +55
   if ((digits.length === 12 || digits.length === 13) && digits.startsWith('55')) {
     digits = digits.substring(2);
   }
+  // Strip leading 0
   if ((digits.length === 11 || digits.length === 12) && digits.startsWith('0')) {
     digits = digits.substring(1);
   }
-  if (digits.length !== 10 && digits.length !== 11) {
-    return null;
+
+  if (digits.length === 0) {
+    return { isValid: false, error: 'Informe o número do seu WhatsApp.' };
+  }
+
+  if (digits.length < 10) {
+    return { isValid: false, error: 'Número incompleto. Digite DDD + celular de 9 dígitos.' };
   }
 
   const ddd = parseInt(digits.substring(0, 2), 10);
-  if (ddd < 11 || ddd > 99) {
-    return null;
+  if (!VALID_BR_DDDS.has(ddd)) {
+    return { isValid: false, error: `DDD ${ddd} não é um DDD brasileiro válido.` };
   }
 
-  return digits;
+  if (digits.length === 10) {
+    return { 
+      isValid: false, 
+      error: 'WhatsApp de celular possui 9 dígitos após o DDD (ex: (14) 9XXXX-XXXX).' 
+    };
+  }
+
+  if (digits.length > 11) {
+    return { isValid: false, error: 'Número com dígitos a mais. O formato deve ser (DD) 9XXXX-XXXX.' };
+  }
+
+  // Verifica o 9º dígito obrigatório
+  if (digits[2] !== '9') {
+    return { 
+      isValid: false, 
+      error: 'O celular com WhatsApp deve iniciar com 9 após o DDD: (DD) 9XXXX-XXXX.' 
+    };
+  }
+
+  // Bloqueio de dígitos repetidos
+  if (/^(\d)\1{10}$/.test(digits)) {
+    return { isValid: false, error: 'Número de telefone inválido (todos os dígitos repetidos).' };
+  }
+
+  // Bloqueio de sequências fictícias óbvias
+  const subscriber = digits.substring(2);
+  if (subscriber === '999999999' || subscriber === '123456789' || subscriber === '987654321' || subscriber === '000000000') {
+    return { isValid: false, error: 'Por favor, informe seu número real de WhatsApp.' };
+  }
+
+  return { isValid: true, cleanPhone: digits };
+}
+
+function normalizeBRPhone(phone) {
+  const result = validateBRWhatsApp(phone);
+  return result.isValid ? result.cleanPhone : null;
 }
 
 function formatBRPhone(digits) {
   if (!digits) return '';
   if (digits.length === 11) {
     return `(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${digits.substring(7)}`;
-  }
-  if (digits.length === 10) {
-    return `(${digits.substring(0, 2)}) ${digits.substring(2, 6)}-${digits.substring(6)}`;
   }
   return digits;
 }
@@ -287,10 +342,11 @@ app.get('/api/palpites', async (req, res) => {
 // Check if a participant exists by phone to prefill form for modification
 app.get('/api/participante/:phone', rateLimit(25, 60000), async (req, res) => {
   try {
-    const rawPhone = normalizeBRPhone(req.params.phone);
-    if (!rawPhone) {
-      return res.status(400).json({ error: 'Número de WhatsApp inválido. Digite o DDD + número.' });
+    const phoneResult = validateBRWhatsApp(req.params.phone);
+    if (!phoneResult.isValid) {
+      return res.status(400).json({ error: phoneResult.error });
     }
+    const rawPhone = phoneResult.cleanPhone;
 
     const found = await db.findParticipantByPhone(rawPhone);
     if (found) {
@@ -334,12 +390,11 @@ app.post('/api/palpite', rateLimit(30, 60000), async (req, res) => {
     }
 
     // Phone Validation with Canonical Normalization
-    const rawPhone = normalizeBRPhone(whatsapp);
-    if (!rawPhone) {
-      return res.status(400).json({ 
-        error: 'Por favor, informe um número de WhatsApp válido com DDD (ex: (14) 99999-9999 ou 14999999999).' 
-      });
+    const phoneResult = validateBRWhatsApp(whatsapp);
+    if (!phoneResult.isValid) {
+      return res.status(400).json({ error: phoneResult.error });
     }
+    const rawPhone = phoneResult.cleanPhone;
 
     // Strict Votes Validation
     const validCapitao = parseStrictVotes(capitao, 'Capitão Augusto');

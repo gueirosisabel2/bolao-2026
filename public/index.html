@@ -350,11 +350,14 @@
           </div>
 
           <div>
-            <label for="whatsapp" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Número de WhatsApp <span class="text-amber-600">*</span>
-            </label>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="whatsapp" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                Número de WhatsApp <span class="text-amber-600">*</span>
+              </label>
+              <span id="whatsappBadge" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-full transition-all"></span>
+            </div>
             <div class="relative">
-              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                 <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i>
               </span>
               <input 
@@ -365,10 +368,14 @@
                 required 
                 placeholder="(14) 99999-9999" 
                 maxlength="15"
-                class="vote-input w-full pl-10 pr-4 py-3 rounded-xl text-sm sm:text-base font-medium focus:ring-0 font-mono shadow-sm"
+                autocomplete="tel"
+                class="vote-input w-full pl-10 pr-10 py-3 rounded-xl text-sm sm:text-base font-medium focus:ring-0 font-mono shadow-sm transition-all"
               >
+              <span id="whatsappStatusIcon" class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none transition-all"></span>
             </div>
-            <p class="text-[11px] text-slate-500 mt-1">Identificador único. Use o mesmo WhatsApp para alterar depois.</p>
+            <div id="whatsappFeedback" class="text-[11px] mt-1.5 font-medium transition-all min-h-[18px]">
+              <span class="text-slate-500">Identificador único. Use o mesmo WhatsApp para alterar depois.</span>
+            </div>
           </div>
         </div>
 

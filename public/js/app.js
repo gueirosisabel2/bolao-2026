@@ -36,18 +36,153 @@ function formatDifference(diff) {
   return `<span class="inline-block bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md font-bold text-xs">${formatNumberBR(diff)}</span>`;
 }
 
-// Canonical Brazilian Phone Normalization
-function normalizeBRPhone(phone) {
-  if (!phone) return null;
+// Official Brazilian DDDs (ANATEL) com mapeamento de regiões
+const BR_DDD_REGIONS = {
+  11: 'São Paulo (Capital e Grande SP)',
+  12: 'São Paulo (Vale do Paraíba / Litoral Norte)',
+  13: 'São Paulo (Baixada Santista / Litoral Sul)',
+  14: 'São Paulo (Marília, Bauru, Jaú e Região)',
+  15: 'São Paulo (Sorocaba e Região)',
+  16: 'São Paulo (Ribeirão Preto, Franca, São Carlos)',
+  17: 'São Paulo (São José do Rio Preto, Barretos)',
+  18: 'São Paulo (Presidente Prudente, Araçatuba, Assis)',
+  19: 'São Paulo (Campinas, Piracicaba, Limeira)',
+  21: 'Rio de Janeiro (Capital e Grande Rio)',
+  22: 'Rio de Janeiro (Região dos Lagos e Norte)',
+  24: 'Rio de Janeiro (Região Serrana e Sul Fluminense)',
+  27: 'Espírito Santo (Vitória e Grande Vitória)',
+  28: 'Espírito Santo (Sul do Estado)',
+  31: 'Minas Gerais (Belo Horizonte e Grande BH)',
+  32: 'Minas Gerais (Juiz de Fora e Zona da Mata)',
+  33: 'Minas Gerais (Governador Valadares e Leste)',
+  34: 'Minas Gerais (Uberlândia e Triângulo Mineiro)',
+  35: 'Minas Gerais (Sul de Minas)',
+  37: 'Minas Gerais (Centro-Oeste)',
+  38: 'Minas Gerais (Norte de Minas)',
+  41: 'Paraná (Curitiba e Região Metropolitana)',
+  42: 'Paraná (Ponta Grossa e Centro-Sul)',
+  43: 'Paraná (Londrina e Norte)',
+  44: 'Paraná (Maringá e Noroeste)',
+  45: 'Paraná (Cascavel, Foz do Iguaçu e Oeste)',
+  46: 'Paraná (Francisco Beltrão e Sudoeste)',
+  47: 'Santa Catarina (Joinville, Blumenau, Litoral)',
+  48: 'Santa Catarina (Florianópolis e Criciúma)',
+  49: 'Santa Catarina (Chapecó e Oeste)',
+  51: 'Rio Grande do Sul (Porto Alegre e Região)',
+  53: 'Rio Grande do Sul (Pelotas e Sul)',
+  54: 'Rio Grande do Sul (Caxias do Sul e Serra)',
+  55: 'Rio Grande do Sul (Santa Maria e Centro)',
+  61: 'Distrito Federal (Brasília e Entorno)',
+  62: 'Goiás (Goiânia e Região Metropolitana)',
+  63: 'Tocantins (Palmas e Interior)',
+  64: 'Goiás (Rio Verde, Caldas Novas e Sul)',
+  65: 'Mato Grosso (Cuiabá e Região Metropolitana)',
+  66: 'Mato Grosso (Rondonópolis, Sinop e Interior)',
+  67: 'Mato Grosso do Sul (Campo Grande e Interior)',
+  68: 'Acre (Rio Branco e Interior)',
+  69: 'Rondônia (Porto Velho e Interior)',
+  71: 'Bahia (Salvador e Região Metropolitana)',
+  73: 'Bahia (Ilhéus, Itabuna, Porto Seguro)',
+  74: 'Bahia (Juazeiro e Região)',
+  75: 'Bahia (Feira de Santana e Região)',
+  77: 'Bahia (Vitória da Conquista e Oeste)',
+  79: 'Sergipe (Aracaju e Interior)',
+  81: 'Pernambuco (Recife e Região Metropolitana)',
+  82: 'Alagoas (Maceió e Interior)',
+  83: 'Paraíba (João Pessoa, Campina Grande)',
+  84: 'Rio Grande do Norte (Natal e Mossoró)',
+  85: 'Ceará (Fortaleza e Região Metropolitana)',
+  86: 'Piauí (Teresina e Norte)',
+  87: 'Pernambuco (Petrolina, Caruaru e Sertão)',
+  88: 'Ceará (Juazeiro do Norte, Sobral)',
+  89: 'Piauí (Picos e Sul)',
+  91: 'Pará (Belém e Região Metropolitana)',
+  92: 'Amazonas (Manaus e Região Metropolitana)',
+  93: 'Pará (Santarém e Oeste)',
+  94: 'Pará (Marabá e Sul)',
+  95: 'Roraima (Boa Vista e Interior)',
+  96: 'Amapá (Macapá e Interior)',
+  97: 'Amazonas (Interior do Estado)',
+  98: 'Maranhão (São Luís e Região Metropolitana)',
+  99: 'Maranhão (Imperatriz e Interior)'
+};
+
+// Validador Oficial de WhatsApp Brasileiro (Celular 11 dígitos com DDD)
+function validateBRWhatsApp(phone) {
+  if (!phone) {
+    return { isValid: false, error: 'Informe o número do seu WhatsApp.' };
+  }
+
   let digits = String(phone).replace(/\D/g, '');
+
+  // Remove prefixo DDI +55 se houver
   if ((digits.length === 12 || digits.length === 13) && digits.startsWith('55')) {
     digits = digits.substring(2);
   }
+  // Remove prefixo de operadora ou zero inicial
   if ((digits.length === 11 || digits.length === 12) && digits.startsWith('0')) {
     digits = digits.substring(1);
   }
-  if (digits.length !== 10 && digits.length !== 11) return null;
-  return digits;
+
+  if (digits.length === 0) {
+    return { isValid: false, error: 'Informe o número do seu WhatsApp.' };
+  }
+
+  if (digits.length < 10) {
+    return { isValid: false, error: 'Número incompleto. Digite DDD + celular de 9 dígitos.' };
+  }
+
+  const ddd = parseInt(digits.substring(0, 2), 10);
+  const regionName = BR_DDD_REGIONS[ddd];
+  if (!regionName) {
+    return { isValid: false, error: `DDD ${ddd} não é um DDD brasileiro válido.` };
+  }
+
+  if (digits.length === 10) {
+    return { 
+      isValid: false, 
+      error: 'WhatsApp de celular precisa ter 9 dígitos após o DDD (ex: (14) 9XXXX-XXXX).' 
+    };
+  }
+
+  if (digits.length > 11) {
+    return { isValid: false, error: 'Número com dígitos a mais. O formato deve ser (DD) 9XXXX-XXXX.' };
+  }
+
+  // Verifica o 9º dígito obrigatório para celulares no Brasil
+  if (digits[2] !== '9') {
+    return { 
+      isValid: false, 
+      error: 'O celular com WhatsApp deve iniciar com 9 após o DDD: (DD) 9XXXX-XXXX.' 
+    };
+  }
+
+  // Bloqueio de dígitos repetidos fictícios (ex: 11111111111, 99999999999)
+  if (/^(\d)\1{10}$/.test(digits)) {
+    return { isValid: false, error: 'Número inválido (todos os dígitos repetidos).' };
+  }
+
+  // Bloqueio de sequências fictícias óbvias
+  const subscriber = digits.substring(2);
+  if (subscriber === '999999999' || subscriber === '123456789' || subscriber === '987654321' || subscriber === '000000000') {
+    return { isValid: false, error: 'Por favor, informe seu número de WhatsApp real.' };
+  }
+
+  const formatted = `(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${digits.substring(7)}`;
+
+  return {
+    isValid: true,
+    cleanPhone: digits,
+    formatted,
+    ddd,
+    region: regionName
+  };
+}
+
+// Canonical Brazilian Phone Normalization
+function normalizeBRPhone(phone) {
+  const result = validateBRWhatsApp(phone);
+  return result.isValid ? result.cleanPhone : null;
 }
 
 // Phone Mask & Input handling (com suporte a colagem com +55)
@@ -64,6 +199,127 @@ function maskPhone(value) {
   if (digits.length <= 6) return `(${digits.substring(0, 2)}) ${digits.substring(2)}`;
   if (digits.length <= 10) return `(${digits.substring(0, 2)}) ${digits.substring(2, 6)}-${digits.substring(6)}`;
   return `(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${digits.substring(7, 11)}`;
+}
+
+// Atualizador visual em tempo real do validador de WhatsApp
+function updateWhatsAppValidationUI(rawInputVal) {
+  const inputEl = document.getElementById('whatsapp');
+  const badgeEl = document.getElementById('whatsappBadge');
+  const iconEl = document.getElementById('whatsappStatusIcon');
+  const feedbackEl = document.getElementById('whatsappFeedback');
+
+  if (!inputEl) return;
+
+  const rawDigits = (rawInputVal || '').replace(/\D/g, '');
+  let digits = rawDigits;
+  if ((digits.length === 12 || digits.length === 13) && digits.startsWith('55')) {
+    digits = digits.substring(2);
+  }
+  if ((digits.length === 11 || digits.length === 12) && digits.startsWith('0')) {
+    digits = digits.substring(1);
+  }
+
+  // 1. Estado vazio
+  if (!digits || digits.length === 0) {
+    inputEl.classList.remove('input-valid', 'input-error');
+    if (badgeEl) {
+      badgeEl.className = 'hidden';
+      badgeEl.innerHTML = '';
+    }
+    if (iconEl) iconEl.innerHTML = '';
+    if (feedbackEl) {
+      feedbackEl.innerHTML = `<span class="text-slate-500">Identificador único. Use o mesmo WhatsApp para alterar depois.</span>`;
+    }
+    hideExistingNotice();
+    return;
+  }
+
+  // 2. Estado digitando (< 11 dígitos)
+  if (digits.length < 11) {
+    if (digits.length >= 2) {
+      const ddd = parseInt(digits.substring(0, 2), 10);
+      const region = BR_DDD_REGIONS[ddd];
+      if (!region) {
+        inputEl.classList.remove('input-valid');
+        inputEl.classList.add('input-error');
+        if (badgeEl) {
+          badgeEl.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200';
+          badgeEl.textContent = 'DDD Inválido';
+        }
+        if (iconEl) iconEl.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-500 text-sm"></i>`;
+        if (feedbackEl) {
+          feedbackEl.innerHTML = `<span class="text-rose-600 font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> DDD ${ddd} não existe no Brasil.</span>`;
+        }
+        hideExistingNotice();
+        return;
+      }
+
+      if (digits.length >= 3 && digits[2] !== '9') {
+        inputEl.classList.remove('input-valid');
+        inputEl.classList.add('input-error');
+        if (badgeEl) {
+          badgeEl.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-300';
+          badgeEl.textContent = 'Falta o 9';
+        }
+        if (iconEl) iconEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-500 text-sm"></i>`;
+        if (feedbackEl) {
+          feedbackEl.innerHTML = `<span class="text-amber-800 font-medium"><i class="fa-solid fa-circle-info mr-1"></i> Celulares com WhatsApp começam com 9: (${ddd}) 9XXXX-XXXX</span>`;
+        }
+        hideExistingNotice();
+        return;
+      }
+
+      // Progresso normal com DDD válido e início com 9
+      inputEl.classList.remove('input-valid', 'input-error');
+      if (badgeEl) {
+        badgeEl.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200';
+        badgeEl.textContent = `${digits.length}/11 dígitos`;
+      }
+      if (iconEl) iconEl.innerHTML = `<i class="fa-solid fa-ellipsis text-slate-300 text-sm"></i>`;
+      if (feedbackEl) {
+        feedbackEl.innerHTML = `<span class="text-slate-600 font-medium"><i class="fa-solid fa-location-dot text-amber-600 mr-1"></i> ${region}</span>`;
+      }
+      hideExistingNotice();
+      return;
+    }
+
+    inputEl.classList.remove('input-valid', 'input-error');
+    if (badgeEl) badgeEl.className = 'hidden';
+    if (iconEl) iconEl.innerHTML = '';
+    if (feedbackEl) {
+      feedbackEl.innerHTML = `<span class="text-slate-500">Digite o DDD + celular (ex: (14) 99999-9999).</span>`;
+    }
+    hideExistingNotice();
+    return;
+  }
+
+  // 3. 11 dígitos preenchidos
+  const validation = validateBRWhatsApp(digits);
+  if (validation.isValid) {
+    inputEl.classList.remove('input-error');
+    inputEl.classList.add('input-valid');
+    if (badgeEl) {
+      badgeEl.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-300 shadow-sm';
+      badgeEl.innerHTML = `<i class="fa-solid fa-check mr-1"></i> WhatsApp Válido`;
+    }
+    if (iconEl) iconEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 text-base"></i>`;
+    if (feedbackEl) {
+      feedbackEl.innerHTML = `<span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> WhatsApp validado • <span class="text-slate-600 font-normal">${validation.region}</span></span>`;
+    }
+    checkExistingParticipant(validation.cleanPhone);
+  } else {
+    inputEl.classList.remove('input-valid');
+    inputEl.classList.add('input-error');
+    if (badgeEl) {
+      badgeEl.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-300';
+      badgeEl.textContent = 'Inválido';
+    }
+    if (iconEl) iconEl.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 text-base"></i>`;
+    if (feedbackEl) {
+      feedbackEl.innerHTML = `<span class="text-rose-600 font-semibold"><i class="fa-solid fa-circle-exclamation mr-1"></i> ${validation.error}</span>`;
+    }
+    hideExistingNotice();
+  }
 }
 
 // Vote Number input mask
@@ -91,11 +347,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (phoneInput) {
     phoneInput.addEventListener('input', (e) => {
       e.target.value = maskPhone(e.target.value);
-      const clean = normalizeBRPhone(e.target.value);
-      if (clean && clean.length >= 10) {
-        checkExistingParticipant(clean);
-      } else {
-        hideExistingNotice();
+      updateWhatsAppValidationUI(e.target.value);
+    });
+
+    phoneInput.addEventListener('blur', (e) => {
+      const val = e.target.value.trim();
+      if (val) {
+        updateWhatsAppValidationUI(val);
       }
     });
   }
@@ -231,14 +489,22 @@ async function handleFormSubmit(e) {
 
   if (!name || name.length < 2) {
     showToast('Por favor, informe seu nome completo.', 'error');
+    const nameInput = document.getElementById('nome');
+    if (nameInput) nameInput.focus();
     return;
   }
 
-  const rawPhone = normalizeBRPhone(whatsapp);
-  if (!rawPhone) {
-    showToast('Informe um número de WhatsApp válido com DDD (ex: (14) 99999-9999).', 'error');
+  const phoneValidation = validateBRWhatsApp(whatsapp);
+  if (!phoneValidation.isValid) {
+    showToast(phoneValidation.error, 'error');
+    const phoneInput = document.getElementById('whatsapp');
+    if (phoneInput) {
+      phoneInput.focus();
+      updateWhatsAppValidationUI(whatsapp);
+    }
     return;
   }
+  const rawPhone = phoneValidation.cleanPhone;
 
   if (capitaoVal <= 0) {
     showToast('Informe seu palpite de votos para o Capitão Augusto.', 'error');
