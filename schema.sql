@@ -23,7 +23,7 @@ ON public.participantes (whatsapp_raw);
 CREATE TABLE IF NOT EXISTS public.configuracao (
   id INT PRIMARY KEY DEFAULT 1,
   title TEXT NOT NULL DEFAULT 'PALPITE VOTOS DANI E CAPITÃO',
-  deadline TIMESTAMPTZ NOT NULL DEFAULT '2026-10-03T18:00:00-03:00',
+  deadline TIMESTAMPTZ NOT NULL DEFAULT '2026-10-04T08:00:00-03:00',
   admin_pin TEXT NOT NULL DEFAULT 'Gueiroo2$',
   simulate_closed BOOLEAN NOT NULL DEFAULT false,
   official_capitao BIGINT,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS public.configuracao (
 
 -- Inserir registro inicial de configuração
 INSERT INTO public.configuracao (id, title, deadline, admin_pin, simulate_closed, published)
-VALUES (1, 'PALPITE VOTOS DANI E CAPITÃO', '2026-10-03T18:00:00-03:00', 'Gueiroo2$', false, false)
+VALUES (1, 'PALPITE VOTOS DANI E CAPITÃO', '2026-10-04T08:00:00-03:00', 'Gueiroo2$', false, false)
 ON CONFLICT (id) DO NOTHING;
 
 -- 3. POLÍTICAS DE SEGURANÇA (Row Level Security)

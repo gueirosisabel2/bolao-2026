@@ -39,7 +39,7 @@ async function initDatabase() {
         await supabase.from('configuracao').insert({
           id: 1,
           title: "PALPITE VOTOS DANI E CAPITÃO",
-          deadline: "2026-10-03T18:00:00-03:00",
+          deadline: "2026-10-04T08:00:00-03:00",
           admin_pin: process.env.ADMIN_PIN || "Gueiroo2$",
           simulate_closed: false,
           published: false
@@ -62,7 +62,7 @@ function loadLocalData() {
       const initial = {
         config: {
           title: "PALPITE VOTOS DANI E CAPITÃO",
-          deadline: "2026-10-03T18:00:00-03:00",
+          deadline: "2026-10-04T08:00:00-03:00",
           adminPin: process.env.ADMIN_PIN || "Gueiroo2$",
           simulateClosed: false,
           officialResults: {
@@ -83,7 +83,7 @@ function loadLocalData() {
     return {
       config: {
         title: "PALPITE VOTOS DANI E CAPITÃO",
-        deadline: "2026-10-03T18:00:00-03:00",
+        deadline: "2026-10-04T08:00:00-03:00",
         adminPin: process.env.ADMIN_PIN || "Gueiroo2$",
         simulateClosed: false,
         officialResults: { capitao: null, dani: null, published: false, publishedAt: null }
@@ -115,7 +115,7 @@ async function getConfig() {
       if (!error && data) {
         return {
           title: data.title || "PALPITE VOTOS DANI E CAPITÃO",
-          deadline: data.deadline || "2026-10-03T18:00:00-03:00",
+          deadline: data.deadline || "2026-10-04T08:00:00-03:00",
           adminPin: data.admin_pin || process.env.ADMIN_PIN || "Gueiroo2$",
           simulateClosed: !!data.simulate_closed,
           officialResults: {

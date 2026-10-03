@@ -47,12 +47,9 @@ app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-  
-  if (req.path.startsWith('/api')) {
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
-  }
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   next();
 });
 
@@ -397,7 +394,7 @@ app.post('/api/palpite', rateLimit(30, 60000), async (req, res) => {
 
     if (isClosed(config)) {
       return res.status(403).json({
-        error: 'Palpites encerrados! O prazo limite de 03/10/2026 às 18:00 (Brasília) foi atingido.'
+        error: 'Palpites encerrados! O prazo limite de 04/10/2026 às 08:00 (Brasília) foi atingido.'
       });
     }
 
@@ -432,6 +429,14 @@ app.post('/api/palpite', rateLimit(30, 60000), async (req, res) => {
 
     const formattedPhone = formatBRPhone(rawPhone);
 
+    // Bloqueio rigoroso: Não permitir alterações no banco de dados de palpites
+    const existing = await db.findParticipantByPhone(rawPhone);
+    if (existing) {
+      return res.status(400).json({
+        error: 'Este número de WhatsApp já possui um palpite registrado. Não são permitidas alterações de palpites.'
+      });
+    }
+
     const { isUpdate } = await db.upsertParticipant({
       name: trimmedName,
       whatsapp: formattedPhone,
@@ -440,9 +445,7 @@ app.post('/api/palpite', rateLimit(30, 60000), async (req, res) => {
       dani: validDani.value
     });
 
-    const message = isUpdate
-      ? 'Palpite atualizado com sucesso! 🎯 Você poderá alterar seus palpites até sábado, 3 de outubro, às 18h.'
-      : 'Palpite registrado com sucesso! 🎯 Você poderá alterar seus palpites até sábado, 3 de outubro, às 18h.';
+    const message = 'Palpite registrado com sucesso! 🎯 Seu palpite definitivo foi gravado com segurança.';
 
     return res.json({
       success: true,
@@ -602,7 +605,7 @@ async function startServer() {
     console.log(`=========================================`);
     console.log(`🎯 BOLÃO DANI & CAPITÃO 2026`);
     console.log(`🌐 Servidor rodando em: http://localhost:${PORT}`);
-    console.log(`📅 Prazo final: 03/10/2026 às 18:00 (Brasília)`);
+    console.log(`📅 Prazo final: 04/10/2026 às 08:00 (Brasília)`);
     console.log(`🗄️  Banco: ${db.isUsingSupabase() ? 'Supabase PostgreSQL (Nuvem)' : 'Local JSON'}`);
     console.log(`🔒 Painel Admin: Acesso Secreto Ativo`);
     console.log(`=========================================`);

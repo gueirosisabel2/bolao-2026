@@ -19,13 +19,13 @@ Sistema completo de Bolão Eleitoral desenvolvido sob medida para os palpites de
 - **Cards com Fotos Reais:** Utiliza as fotos oficiais de Capitão Augusto e Dani Alonso da pasta `FOTOS`.
 - **Botão:** `🎯 CONFIRMAR MEU PALPITE`.
 - **Mensagem Oficial de Confirmação:**
-  > *“Palpite registrado com sucesso! 🎯 Você poderá alterar seus palpites até sábado, 3 de outubro, às 18h.”*
+  > *“Palpite registrado com sucesso! 🎯 Você poderá alterar seus palpites até domingo, 4 de outubro, às 8h.”*
 - **Cadastro Único por WhatsApp & Alterações Ilimitadas:**
   - Cada número de WhatsApp tem direito a apenas 1 registro.
   - Ao digitar o mesmo WhatsApp novamente no formulário, o sistema identifica automaticamente o cadastro anterior, preenche os dados e altera o botão para `🎯 ATUALIZAR MEU PALPITE`.
   - O participante pode alterar seus palpites quantas vezes quiser até o prazo limite.
 - **Bloqueio Automático:**
-  - No dia **03/10/2026 às 18:00 (horário de Brasília)**, tanto o frontend quanto a API bloqueiam automaticamente qualquer novo cadastro ou alteração, congelando todos os registros.
+  - No dia **04/10/2026 às 08:00 (horário de Brasília)**, tanto o frontend quanto a API bloqueiam automaticamente qualquer novo cadastro ou alteração, congelando todos os registros.
 
 ### 2. Palpites Públicos ("📊 PALPITES DA GALERA")
 - **Transparência Total:** "NÃO EXISTEM PALPITES SECRETOS."
@@ -52,7 +52,7 @@ Sistema completo de Bolão Eleitoral desenvolvido sob medida para os palpites de
 ### 4. Contagem Regressiva em Destaque
 - Exibição destacada: **`⏱️ TEMPO PARA DAR OU ALTERAR SEU PALPITE`**
 - Contagem regressiva em tempo real: `XX dias : XX horas : XX minutos : XX segundos`
-- Término exato: **03/10/2026 às 18:00 — horário de Brasília**
+- Término exato: **04/10/2026 às 08:00 — horário de Brasília**
 - Ao zerar, substitui automaticamente por:
   - **`🔒 PALPITES ENCERRADOS!`**
   - *“Agora é só aguardar a apuração!”*

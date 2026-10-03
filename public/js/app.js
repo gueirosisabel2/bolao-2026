@@ -1,6 +1,6 @@
 // Bolão Dani Alonso & Capitão Augusto 2026 - Main Application Logic (Light Theme & Mobile Optimized)
 
-const DEADLINE_ISO = "2026-10-03T18:00:00-03:00";
+const DEADLINE_ISO = "2026-10-04T08:00:00-03:00";
 let appState = {
   status: null,
   participants: [],
@@ -429,6 +429,7 @@ async function loadData() {
     appState.ranking = data.ranking;
     appState.officialResults = data.officialResults;
     appState.isClosed = data.isClosed;
+    if (data.deadline) appState.deadline = data.deadline;
 
     renderStats();
     renderPublicTable();
@@ -463,10 +464,10 @@ function showExistingNotice(p) {
   const btn = document.getElementById('submitPalpiteBtn');
   if (noticeEl) {
     noticeEl.innerHTML = `
-      <div class="p-3 sm:p-3.5 bg-amber-50 border border-amber-300 rounded-xl flex items-center justify-between text-xs sm:text-sm text-amber-900 shadow-sm">
+      <div class="p-3 sm:p-3.5 bg-rose-50 border border-rose-300 rounded-xl flex items-center justify-between text-xs sm:text-sm text-rose-900 shadow-sm">
         <div class="flex items-center space-x-2 sm:space-x-2.5">
-          <i class="fa-solid fa-arrows-rotate text-amber-600 text-base sm:text-lg flex-shrink-0"></i>
-          <span><strong>Cadastro localizado!</strong> Seus palpites atuais foram preenchidos. Você pode alterá-los à vontade até sábado (03/10 às 18h).</span>
+          <i class="fa-solid fa-lock text-rose-600 text-base sm:text-lg flex-shrink-0"></i>
+          <span><strong>WhatsApp já cadastrado!</strong> Este número já registrou um palpite definitivo (${p.name || ''}). Não são permitidas alterações de palpites.</span>
         </div>
       </div>
     `;
@@ -478,12 +479,13 @@ function showExistingNotice(p) {
   const capInput = document.getElementById('palpiteCapitao');
   const daniInput = document.getElementById('palpiteDani');
 
-  if (p.name && !nameInput.value) nameInput.value = p.name;
+  if (p.name) nameInput.value = p.name;
   if (capInput) capInput.value = formatNumberBR(p.capitao);
   if (daniInput) daniInput.value = formatNumberBR(p.dani);
 
-  if (btn && !appState.isClosed) {
-    btn.innerHTML = `<i class="fa-solid fa-arrows-rotate mr-2 text-base"></i><span>ATUALIZAR MEU PALPITE</span>`;
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fa-solid fa-lock mr-2 text-base"></i><span>PALPITE JÁ REGISTRADO</span>`;
   }
 }
 
@@ -492,6 +494,7 @@ function hideExistingNotice() {
   const btn = document.getElementById('submitPalpiteBtn');
   if (noticeEl) noticeEl.classList.add('hidden');
   if (btn && !appState.isClosed) {
+    btn.disabled = false;
     btn.innerHTML = `<i class="fa-solid fa-bullseye text-lg mr-2"></i><span>CONFIRMAR MEU PALPITE</span>`;
   }
 }
@@ -590,8 +593,8 @@ function showSuccessModal(message, isUpdate) {
   const titleEl = document.getElementById('successModalTitle');
   const msgEl = document.getElementById('successModalMessage');
 
-  titleEl.innerHTML = isUpdate ? 'Palpite Atualizado!' : 'Palpite Registrado com Sucesso!';
-  msgEl.innerText = message || 'Palpite registrado com sucesso! 🎯 Você poderá alterar seus palpites até sábado, 3 de outubro, às 18h.';
+  titleEl.innerHTML = 'Palpite Registrado com Sucesso!';
+  msgEl.innerText = message || 'Palpite registrado com sucesso! 🎯 Seu palpite definitivo foi gravado com segurança.';
 
   modal.classList.remove('hidden');
 }
@@ -602,9 +605,8 @@ function closeSuccessModal() {
 
 // Countdown Timer Logic
 function startCountdown() {
-  const deadlineDate = new Date(DEADLINE_ISO).getTime();
-
   function update() {
+    const deadlineDate = new Date(appState.deadline || DEADLINE_ISO).getTime();
     const now = Date.now() + (appState.serverTimeOffset || 0);
     const diff = deadlineDate - now;
 
